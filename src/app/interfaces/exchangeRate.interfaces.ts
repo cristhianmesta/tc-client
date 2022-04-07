@@ -12,5 +12,6 @@ export interface ExchangeRate {
 export interface ExchangeRatePrecio {
     fecha: string;
     valor:    number;
+    simbolo: string;
 }
 

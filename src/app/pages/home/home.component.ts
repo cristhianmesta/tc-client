@@ -19,8 +19,8 @@ export class HomeComponent implements OnInit, AfterContentInit {
   actualizando : boolean = false;
   total: number = 0
 
-  pc : ExchangeRatePrecio = { fecha: '', valor: 0.00};
-  pv : ExchangeRatePrecio = { fecha: '', valor: 0.00};
+  pc : ExchangeRatePrecio = { fecha: '', valor: 0.00 , simbolo: "🟡"};
+  pv : ExchangeRatePrecio = { fecha: '', valor: 0.00 , simbolo: "🟡"};
 
 
   //view: [number, number] = [700, 300];
@@ -82,16 +82,26 @@ export class HomeComponent implements OnInit, AfterContentInit {
                 
                 this.pv = { 
                   fecha: this.data[0].series[this.total-1].name,
-                  valor: this.data[0].series[this.total-1].value
+                  valor: this.data[0].series[this.total-1].value,
+                  simbolo: this.selectSimbol(this.data[0].series)
                 }
 
                 this.pc = { 
                   fecha: this.data[1].series[this.total-1].name,
-                  valor: this.data[1].series[this.total-1].value
+                  valor: this.data[1].series[this.total-1].value,
+                  simbolo: this.selectSimbol(this.data[1].series)
                 }
                 Object.assign(this, { multi: this.data });
             });
            
+  }
+
+
+  selectSimbol(collection: any){
+    let simbolo = '🟡';
+    if(collection[this.total-1].value>collection[this.total-2].value) simbolo = "🔴"
+    if(collection[this.total-1].value<collection[this.total-2].value) simbolo = "🟢"
+    return simbolo
   }
 
   onSelect(data: any): void {
@@ -105,4 +115,6 @@ export class HomeComponent implements OnInit, AfterContentInit {
   onDeactivate(data: any): void {
     console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
+
+
 }

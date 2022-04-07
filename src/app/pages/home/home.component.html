@@ -7,13 +7,13 @@
       <div class="box m-2 has-background-success-light">
         <strong>Venta</strong> 
         <p>{{ pv.fecha | date:'dd/MM/yyyy, HH:mm:ss' : 'UTC'  }}</p>
-        <p class="title is-1">{{ pv.valor }}</p>
+        <p class="title is-1">{{ pv.valor }} {{ pv.simbolo}}</p>
       </div>
     
       <div class="box m-2 has-background-danger-light ">
         <strong>Compra</strong>   
         <p>{{ pc.fecha | date:'dd/MM/yyyy, HH:mm:ss' : 'UTC' }}</p>
-        <p class="title is-1">{{ pc.valor }}</p>
+        <p class="title is-1">{{ pc.valor }} {{ pc.simbolo}}</p>
       </div>
     </div>
   </section>
