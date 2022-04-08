@@ -1,18 +1,24 @@
-<div class="chart-container">
+<div>
   <section class="is-flex is-flex-direction-row is-justify-content-space-between">
     <div class="is-flex is-flex-direction-column">
-      
+      <div class="field box">
+        <label class="label">Fecha</label>
+        <div class="control">
+          <input class="input" type="date" name="myDate" [(ngModel)]="myDate" (change)="refresh()" >
+        </div>
+      </div>
     </div>
-    <div class="is-flex is-flex-direction-row ">
+    <div class="is-flex is-flex-direction-row "
+         *ngIf="pv.fecha!=='-'">
       <div class="box m-2 has-background-success-light">
         <strong>Venta</strong> 
-        <p>{{ pv.fecha | date:'dd/MM/yyyy, HH:mm:ss' : 'UTC'  }}</p>
+        <p>{{ pv.fecha | date:'dd/MM/yyyy HH:mm:ss'  }}</p>
         <p class="title is-1">{{ pv.valor }} {{ pv.simbolo}}</p>
       </div>
     
       <div class="box m-2 has-background-danger-light ">
         <strong>Compra</strong>   
-        <p>{{ pc.fecha | date:'dd/MM/yyyy, HH:mm:ss' : 'UTC' }}</p>
+        <p>{{ pc.fecha | date:'dd/MM/yyyy HH:mm:ss' }}</p>
         <p class="title is-1">{{ pc.valor }} {{ pc.simbolo}}</p>
       </div>
     </div>
@@ -20,22 +26,25 @@
 
   <br>  
   <br>
-  <ngx-charts-line-chart
-  [autoScale]="true"
-  [scheme]="colorScheme"
-  [legend]="legend"
-  [showXAxisLabel]="showXAxisLabel"
-  [showYAxisLabel]="showYAxisLabel"
-  [xAxis]="xAxis"
-  [yAxis]="yAxis"
-  [xAxisLabel]="xAxisLabel"
-  [yAxisLabel]="yAxisLabel"
-  [timeline]="timeline"
-  [results]="multi"
-  (select)="onSelect($event)"
-  (activate)="onActivate($event)"
-  (deactivate)="onDeactivate($event)"
-  ></ngx-charts-line-chart>
-  <progress class="progress is-large is-info" max="100">60%</progress>
+  <div *ngIf="pv.fecha!=='-'"
+      class="chart-container">
+    <ngx-charts-line-chart
+    [autoScale]="true"
+    [scheme]="colorScheme"
+    [legend]="legend"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxis]="xAxis"
+    [yAxis]="yAxis"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [timeline]="timeline"
+    [results]="multi"
+    (select)="onSelect($event)"
+    (activate)="onActivate($event)"
+    (deactivate)="onDeactivate($event)"
+    ></ngx-charts-line-chart>
+    <progress class="progress is-large is-info" max="100">60%</progress>
+  </div>
 </div>
 

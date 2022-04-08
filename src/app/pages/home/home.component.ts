@@ -1,30 +1,27 @@
-import { AfterContentInit, Component, OnInit } from '@angular/core';
+import { AfterContentInit, Component, Input, OnInit } from '@angular/core';
 import { ExchangeRateService } from 'src/app/services/exchange-rate.service';
 
-import { BrowserModule } from '@angular/platform-browser';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ExchangeRatePrecio } from 'src/app/interfaces/exchangeRate.interfaces';
-
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit, AfterContentInit {
+export class HomeComponent implements  AfterContentInit {
 
-  data: any[] = [];
-  multi: any[] = [];
+  myDate  : string  = new Date().toLocaleDateString('en-CA');
+  data    : any[]   = [];
+  multi   : any[]   = [];
 
   actualizando : boolean = false;
   total: number = 0
 
-  pc : ExchangeRatePrecio = { fecha: '', valor: 0.00 , simbolo: "🟡"};
-  pv : ExchangeRatePrecio = { fecha: '', valor: 0.00 , simbolo: "🟡"};
-
+  pc : ExchangeRatePrecio = { fecha: '-', valor: 0.00 , simbolo: "🟡"};
+  pv : ExchangeRatePrecio = { fecha: '-', valor: 0.00 , simbolo: "🟡"};
 
   //view: [number, number] = [700, 300];
-
 
   // options
   legend: boolean = false;
@@ -42,22 +39,20 @@ export class HomeComponent implements OnInit, AfterContentInit {
     domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
   };
 
-  myDate = new Date();
-
   constructor(private exchangeRateService : ExchangeRateService) { 
-    this.list('2022-04-07');
+    this.list(this.myDate);
   }
 
   ngAfterContentInit(): void {
-    setInterval( () => {
-      this.list('2022-04-07');
-    }, 10000);
+    setInterval( () => { this.list(this.myDate); }, 10000);
   }
 
-
-  ngOnInit(): void {
-    
+  refresh(){
+    this.pv = { fecha: '-', valor: 0.00 , simbolo: "🟡"};
+    this.pc = { fecha: '-', valor: 0.00 , simbolo: "🟡"}
+    this.list(this.myDate);
   }
+
 
   list(day : string) : void {
     this.exchangeRateService
@@ -67,14 +62,14 @@ export class HomeComponent implements OnInit, AfterContentInit {
                 this.data.push(({
                   name: "Venta",
                   series: resp.map( x => ({
-                      name: new Date(x.fecha).toISOString(),
+                      name: x.fecha,
                       value: x.pv
                   }))
                 }));
                 this.data.push(({
                   name: "Compra",
                   series: resp.map( x => ({
-                      name: new Date(x.fecha).toISOString(),
+                      name: x.fecha,
                       value: x.pc
                   }))
                 }));
@@ -91,6 +86,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
                   valor: this.data[1].series[this.total-1].value,
                   simbolo: this.selectSimbol(this.data[1].series)
                 }
+                
                 Object.assign(this, { multi: this.data });
             });
            
@@ -115,6 +111,5 @@ export class HomeComponent implements OnInit, AfterContentInit {
   onDeactivate(data: any): void {
     console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
-
 
 }
