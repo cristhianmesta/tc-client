@@ -1,32 +1,32 @@
 <div>
-  <section class="is-flex is-flex-direction-row is-justify-content-space-between">
-    <div class="is-flex is-flex-direction-column">
-      <div class="field box">
-        <label class="label">Fecha</label>
+  <section class="columns">
+    <div class="column is-half is-mobile">
+      <div class="box">
+        <p class="title is-3 mb-2">Evoluación diaría💰</p>
+        <label class="label">Seleccionar una fecha:</label>
         <div class="control">
-          <input class="input" type="date" name="myDate" [(ngModel)]="myDate" (change)="refresh()" >
+          <input class="input is-large" type="date" name="myDate" [(ngModel)]="myDate" (change)="refresh()" >
         </div>
       </div>
     </div>
-    <div class="is-flex is-flex-direction-row "
-         *ngIf="pv.fecha!=='-'">
-      <div class="box m-2 has-background-success-light">
-        <strong>Venta</strong> 
-        <p>{{ pv.fecha | date:'dd/MM/yyyy HH:mm:ss'  }}</p>
-        <p class="title is-1">{{ pv.valor }} {{ pv.simbolo}}</p>
-      </div>
-    
-      <div class="box m-2 has-background-danger-light ">
-        <strong>Compra</strong>   
-        <p>{{ pc.fecha | date:'dd/MM/yyyy HH:mm:ss' }}</p>
-        <p class="title is-1">{{ pc.valor }} {{ pc.simbolo}}</p>
-      </div>
+    <div *ngIf="data.length > 0" class="column is-one-quarter">
+      <app-precio titulo="Venta" [precio]="pv" color="success"></app-precio>
     </div>
+    <div *ngIf="data.length > 0" class="column is-one-quarter">
+      <app-precio titulo="Compra" [precio]="pc" color="danger"></app-precio>
+    </div>  
   </section>
 
+  <section *ngIf="data.length > 0"
+            class="columns" >
+    <div *ngFor="let rateItem of RateGroup"
+         class="column">
+      <app-ratio [rate] = "rateItem"></app-ratio>
+    </div>
+  </section>
   <br>  
   <br>
-  <div *ngIf="pv.fecha!=='-'"
+  <div *ngIf="data.length > 0"
       class="chart-container">
     <ngx-charts-line-chart
     [autoScale]="true"
@@ -44,7 +44,7 @@
     (activate)="onActivate($event)"
     (deactivate)="onDeactivate($event)"
     ></ngx-charts-line-chart>
-    <progress class="progress is-large is-info" max="100">60%</progress>
   </div>
+  <h1 *ngIf="data.length === 0" class="title is-3 has-text-centered">No existen datos 😔</h1>
 </div>
 

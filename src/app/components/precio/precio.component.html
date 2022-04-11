@@ -1,0 +1,5 @@
+<div [ngClass]="getDivClass()">
+    <span [ngClass]="getSpanClass()">{{ titulo }}</span>
+    <p [ngClass]="getPFecha()">{{ precio.fecha | date:'dd/MM/yyyy HH:mm:ss'  }}</p>
+    <p class="title is-1">{{ precio.valor }} {{ precio.simbolo}}</p>
+</div>

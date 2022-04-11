@@ -1,8 +1,7 @@
 import { AfterContentInit, Component, Input, OnInit } from '@angular/core';
 import { ExchangeRateService } from 'src/app/services/exchange-rate.service';
 
-import { ExchangeRatePrecio } from 'src/app/interfaces/exchangeRate.interfaces';
-import { DatePipe } from '@angular/common';
+import { ExchangeRatePrecio, Rate } from 'src/app/interfaces/exchangeRate.interfaces';
 
 @Component({
   selector: 'app-home',
@@ -11,20 +10,21 @@ import { DatePipe } from '@angular/common';
 })
 export class HomeComponent implements  AfterContentInit {
 
-  myDate  : string  = new Date().toLocaleDateString('en-CA');
-  data    : any[]   = [];
-  multi   : any[]   = [];
+  myDate      : string      = new Date().toLocaleDateString('en-CA');
+  data        : any[]       = [];
+  multi       : any[]       = [];
+  RateGroup   : Rate[]   = [];
 
   actualizando : boolean = false;
   total: number = 0
 
-  pc : ExchangeRatePrecio = { fecha: '-', valor: 0.00 , simbolo: "🟡"};
-  pv : ExchangeRatePrecio = { fecha: '-', valor: 0.00 , simbolo: "🟡"};
+  pc : ExchangeRatePrecio = { fecha: '00/00/0000 00:00:00', valor: 0.00 , simbolo: "🟡"};
+  pv : ExchangeRatePrecio = { fecha: '00/00/0000 00:00:00', valor: 0.00 , simbolo: "🟡"};
 
   //view: [number, number] = [700, 300];
 
   // options
-  legend: boolean = false;
+  legend: boolean = true;
   showLabels: boolean = true;
   animations: boolean = true;
   xAxis: boolean = true;
@@ -48,8 +48,8 @@ export class HomeComponent implements  AfterContentInit {
   }
 
   refresh(){
-    this.pv = { fecha: '-', valor: 0.00 , simbolo: "🟡"};
-    this.pc = { fecha: '-', valor: 0.00 , simbolo: "🟡"}
+    this.pv = { fecha: '0000-00-00 00:00:00', valor: 0.00 , simbolo: "🟡"};
+    this.pc = { fecha: '0000-00-00 00:00:00', valor: 0.00 , simbolo: "🟡"}
     this.list(this.myDate);
   }
 
@@ -59,45 +59,64 @@ export class HomeComponent implements  AfterContentInit {
             .getByDay(day)
             .subscribe( resp => {
                 this.data = [];
-                this.data.push(({
-                  name: "Venta",
-                  series: resp.map( x => ({
-                      name: x.fecha,
-                      value: x.pv
-                  }))
-                }));
-                this.data.push(({
-                  name: "Compra",
-                  series: resp.map( x => ({
-                      name: x.fecha,
-                      value: x.pc
-                  }))
-                }));
-                this.total = Object.keys(this.data[0].series).length;
-                
-                this.pv = { 
-                  fecha: this.data[0].series[this.total-1].name,
-                  valor: this.data[0].series[this.total-1].value,
-                  simbolo: this.selectSimbol(this.data[0].series)
-                }
+                if(resp.length>0){
+                  this.data.push(({
+                    name: "Venta",
+                    series: resp.map( x => ({name: x.fecha, value: x.pv}))
+                  }));
+                  this.data.push(({
+                    name: "Compra",
+                    series: resp.map( x => ({name: x.fecha, value: x.pc}))
+                  }));
+                  this.total = Object.keys(this.data[0].series).length;
+                  
+                  this.pv = { 
+                    fecha   : this.data[0].series[this.total-1].name,
+                    valor   : this.data[0].series[this.total-1].value,
+                    simbolo : this.selectSimbol(this.data[0].series)
+                  }
 
-                this.pc = { 
-                  fecha: this.data[1].series[this.total-1].name,
-                  valor: this.data[1].series[this.total-1].value,
-                  simbolo: this.selectSimbol(this.data[1].series)
+                  this.pc = { 
+                    fecha   : this.data[1].series[this.total-1].name,
+                    valor   : this.data[1].series[this.total-1].value,
+                    simbolo : this.selectSimbol(this.data[1].series)
+                  }
+
+                  this.populateRateGroup();
                 }
-                
+ 
                 Object.assign(this, { multi: this.data });
             });
            
   }
 
-
   selectSimbol(collection: any){
-    let simbolo = '🟡';
-    if(collection[this.total-1].value>collection[this.total-2].value) simbolo = "🔴"
-    if(collection[this.total-1].value<collection[this.total-2].value) simbolo = "🟢"
+    let simbolo = '- 🟡';
+    if(collection[this.total-1].value>collection[this.total-2].value) simbolo = "↗ 🔴"
+    if(collection[this.total-1].value<collection[this.total-2].value) simbolo = "↘ 🟢"
     return simbolo
+  }
+
+  populateRateGroup(){
+    this.RateGroup = [];
+    const venta   = this.data[0].series;
+
+    let venta_promedio =  venta.reduce((a : any, b: any) => a + b.value, 0)/venta.length;
+    let venta_max = Math.max(...venta.map((item : any) => item.value ));
+    let venta_min = Math.min(...venta.map((item : any) => item.value ));
+
+    const compra  = this.data[1].series;
+
+    let compra_promedio = compra.reduce((a : any, b: any) => a + b.value, 0 )/venta.length;
+    let compra_max = Math.max(...compra.map((item : any) => item.value ));
+    let compra_min = Math.min(...compra.map((item : any) => item.value ));
+
+
+    this.RateGroup.push({ name: "Promedio", values: { pv: venta_promedio, pc: compra_promedio } });
+    this.RateGroup.push({ name: "Máximo"  , values: { pv: venta_max     , pc: compra_max      } });
+    this.RateGroup.push({ name: "Mínimo"  , values: { pv: venta_min     , pc: compra_min      } });
+
+    console.log(this.RateGroup)
   }
 
   onSelect(data: any): void {

@@ -10,8 +10,20 @@ export interface ExchangeRate {
 }
 
 export interface ExchangeRatePrecio {
-    fecha: string;
-    valor:    number;
-    simbolo: string;
+    fecha   : string;
+    valor   : number;
+    simbolo?: string;
 }
+
+export interface Rate {
+    name?    : string;
+    values?  : RateValues;
+}
+
+export interface RateValues {
+    pc?     : number;
+    pv?     : number;
+}
+
+
 
