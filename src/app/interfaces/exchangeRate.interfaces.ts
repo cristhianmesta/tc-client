@@ -12,6 +12,7 @@ export interface ExchangeRate {
 export interface ExchangeRatePrecio {
     fecha   : string;
     valor   : number;
+    rates?  : RateValues;
     simbolo?: string;
 }
 
@@ -21,8 +22,9 @@ export interface Rate {
 }
 
 export interface RateValues {
-    pc?     : number;
-    pv?     : number;
+    max?     : number;
+    min?     : number;
+    avg?     : number;
 }
 
 

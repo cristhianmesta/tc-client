@@ -13,7 +13,6 @@ export class HomeComponent implements  AfterContentInit {
   myDate      : string      = new Date().toLocaleDateString('en-CA');
   data        : any[]       = [];
   multi       : any[]       = [];
-  RateGroup   : Rate[]   = [];
 
   actualizando : boolean = false;
   total: number = 0
@@ -73,16 +72,17 @@ export class HomeComponent implements  AfterContentInit {
                   this.pv = { 
                     fecha   : this.data[0].series[this.total-1].name,
                     valor   : this.data[0].series[this.total-1].value,
-                    simbolo : this.selectSimbol(this.data[0].series)
+                    simbolo : this.selectSimbol(this.data[0].series),
+                    rates   : this.populateRates(this.data[0].series)
                   }
 
                   this.pc = { 
                     fecha   : this.data[1].series[this.total-1].name,
                     valor   : this.data[1].series[this.total-1].value,
-                    simbolo : this.selectSimbol(this.data[1].series)
+                    simbolo : this.selectSimbol(this.data[1].series),
+                    rates   : this.populateRates(this.data[1].series)
                   }
 
-                  this.populateRateGroup();
                 }
  
                 Object.assign(this, { multi: this.data });
@@ -97,26 +97,11 @@ export class HomeComponent implements  AfterContentInit {
     return simbolo
   }
 
-  populateRateGroup(){
-    this.RateGroup = [];
-    const venta   = this.data[0].series;
-
-    let venta_promedio =  venta.reduce((a : any, b: any) => a + b.value, 0)/venta.length;
-    let venta_max = Math.max(...venta.map((item : any) => item.value ));
-    let venta_min = Math.min(...venta.map((item : any) => item.value ));
-
-    const compra  = this.data[1].series;
-
-    let compra_promedio = compra.reduce((a : any, b: any) => a + b.value, 0 )/venta.length;
-    let compra_max = Math.max(...compra.map((item : any) => item.value ));
-    let compra_min = Math.min(...compra.map((item : any) => item.value ));
-
-
-    this.RateGroup.push({ name: "Promedio", values: { pv: venta_promedio, pc: compra_promedio } });
-    this.RateGroup.push({ name: "Máximo"  , values: { pv: venta_max     , pc: compra_max      } });
-    this.RateGroup.push({ name: "Mínimo"  , values: { pv: venta_min     , pc: compra_min      } });
-
-    console.log(this.RateGroup)
+  populateRates(serie : any){
+    let promedio =  serie.reduce((a : any, b: any) => a + b.value, 0)/serie.length;
+    let max = Math.max(...serie.map((item : any) => item.value ));
+    let min = Math.min(...serie.map((item : any) => item.value ));
+    return { avg: promedio,  max: max, min: min };
   }
 
   onSelect(data: any): void {

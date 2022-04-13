@@ -1,5 +1,12 @@
 <div [ngClass]="getDivClass()">
-    <span [ngClass]="getSpanClass()">{{ titulo }}</span>
+    <div [ngClass]="getSpanClass()">{{ titulo }}</div>
     <p [ngClass]="getPFecha()">{{ precio.fecha | date:'dd/MM/yyyy HH:mm:ss'  }}</p>
     <p class="title is-1">{{ precio.valor }} {{ precio.simbolo}}</p>
+
+    <div class="tags are-medium">
+        <span [ngClass]="getSpanRatio()">Prom: {{ precio.rates?.avg  | number:'1.0-3'}}</span>
+        <span [ngClass]="getSpanRatio()">Máx: {{ precio.rates?.max }}</span>
+        <span [ngClass]="getSpanRatio()">Min: {{ precio.rates?.min }}</span>
+    </div>
+
 </div>

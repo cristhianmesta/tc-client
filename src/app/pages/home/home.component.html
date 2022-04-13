@@ -1,50 +1,42 @@
 <div>
   <section class="columns">
-    <div class="column is-half is-mobile">
+    <div class="column is-one-third is-mobile">
       <div class="box">
-        <p class="title is-3 mb-2">Evoluación diaría💰</p>
-        <label class="label">Seleccionar una fecha:</label>
+        <p class="title is-3 mb-6">Evolución diaria💰</p>
+        <label class="label mb-3">Seleccionar una fecha:</label>
         <div class="control">
           <input class="input is-large" type="date" name="myDate" [(ngModel)]="myDate" (change)="refresh()" >
         </div>
       </div>
     </div>
-    <div *ngIf="data.length > 0" class="column is-one-quarter">
+    <div *ngIf="data.length > 0" class="column is-one-third">
       <app-precio titulo="Venta" [precio]="pv" color="success"></app-precio>
     </div>
-    <div *ngIf="data.length > 0" class="column is-one-quarter">
+    <div *ngIf="data.length > 0" class="column is-one-third">
       <app-precio titulo="Compra" [precio]="pc" color="danger"></app-precio>
     </div>  
   </section>
-
   <section *ngIf="data.length > 0"
-            class="columns" >
-    <div *ngFor="let rateItem of RateGroup"
-         class="column">
-      <app-ratio [rate] = "rateItem"></app-ratio>
-    </div>
-  </section>
-  <br>  
-  <br>
-  <div *ngIf="data.length > 0"
       class="chart-container">
     <ngx-charts-line-chart
-    [autoScale]="true"
-    [scheme]="colorScheme"
-    [legend]="legend"
-    [showXAxisLabel]="showXAxisLabel"
-    [showYAxisLabel]="showYAxisLabel"
-    [xAxis]="xAxis"
-    [yAxis]="yAxis"
-    [xAxisLabel]="xAxisLabel"
-    [yAxisLabel]="yAxisLabel"
-    [timeline]="timeline"
-    [results]="multi"
-    (select)="onSelect($event)"
-    (activate)="onActivate($event)"
-    (deactivate)="onDeactivate($event)"
+            [autoScale]="true"
+            [scheme]="colorScheme"
+            [legend]="legend"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxis]="xAxis"
+            [yAxis]="yAxis"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+            [timeline]="timeline"
+            [results]="multi"
+            (select)="onSelect($event)"
+            (activate)="onActivate($event)"
+            (deactivate)="onDeactivate($event)"
     ></ngx-charts-line-chart>
-  </div>
-  <h1 *ngIf="data.length === 0" class="title is-3 has-text-centered">No existen datos 😔</h1>
+  </section>
+  <section *ngIf="data.length === 0" class="title is-3 has-text-centered">
+    No existen datos 😔
+  </section>
 </div>
 

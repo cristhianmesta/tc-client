@@ -17,10 +17,14 @@ export class PrecioComponent  {
   }
 
   getSpanClass(){
-    return `tag is-${this.color} mb-5`
+    return `title is-4 has-text-${this.color} mb-3`
   }
 
   getPFecha(){
     return `has-text-${this.color}`
+  }
+
+  getSpanRatio(){
+    return `tag is-${this.color}`
   }
 }

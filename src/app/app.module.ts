@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { TrendsComponent } from './pages/trends/trends.component';
 import { PrecioComponent } from './components/precio/precio.component';
-import { RatioComponent } from './components/ratio/ratio.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +17,6 @@ import { RatioComponent } from './components/ratio/ratio.component';
     HomeComponent,
     TrendsComponent,
     PrecioComponent,
-    RatioComponent
   ],
   imports: [
     BrowserModule,
