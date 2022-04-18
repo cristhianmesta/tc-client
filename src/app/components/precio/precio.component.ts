@@ -27,4 +27,8 @@ export class PrecioComponent  {
   getSpanRatio(){
     return `tag is-${this.color}`
   }
+
+  showIconAlert(value : any){
+    return value === this.precio.valor ? '💡' : ''
+  }
 }

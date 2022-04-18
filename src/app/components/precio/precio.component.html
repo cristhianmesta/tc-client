@@ -4,9 +4,15 @@
     <p class="title is-1">{{ precio.valor }} {{ precio.simbolo}}</p>
 
     <div class="tags are-medium">
-        <span [ngClass]="getSpanRatio()">Prom: {{ precio.rates?.avg  | number:'1.0-3'}}</span>
-        <span [ngClass]="getSpanRatio()">Máx: {{ precio.rates?.max }}</span>
-        <span [ngClass]="getSpanRatio()">Min: {{ precio.rates?.min }}</span>
+        <span [ngClass]="getSpanRatio()">
+            Prom: {{ precio.rates?.avg  | number:'1.0-3'}} {{ showIconAlert(precio.rates?.avg) }}
+        </span>
+        <span [ngClass]="getSpanRatio()"> 
+            Máx: {{ precio.rates?.max }} {{ showIconAlert(precio.rates?.max) }}
+        </span>
+        <span [ngClass]="getSpanRatio()"> 
+            Min: {{ precio.rates?.min }} {{ showIconAlert(precio.rates?.min) }}
+        </span>
     </div>
 
 </div>
