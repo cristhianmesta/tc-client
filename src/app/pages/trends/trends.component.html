@@ -1,30 +1,38 @@
-<h1 class="title">Tendencias</h1>
+<h1 class="title">Minimos</h1>
 
-<div class="tabs is-boxed">
-    <ul>
-      <li class="is-active">
-        <a>
-          <span class="icon is-small">(x̄)</span>
-          <span>Promedios</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <span class="icon is-small"><i class="fas fa-music" aria-hidden="true"></i></span>
-          <span>Music</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <span class="icon is-small"><i class="fas fa-film" aria-hidden="true"></i></span>
-          <span>Videos</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <span class="icon is-small"><i class="far fa-file-alt" aria-hidden="true"></i></span>
-          <span>Documents</span>
-        </a>
-      </li>
-    </ul>
-  </div>
+<table class="table is-fullwidth">
+ <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th>08:00</th>
+      <th>09:00</th>
+      <th>10:00</th>
+      <th>11:00</th>
+      <th>12:00</th>
+      <th>13:00</th>
+      <th>14:00</th>
+      <th>15:00</th>
+      <th>16:00</th>
+      <th>17:00</th> 
+      <th>18:00</th> 
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of table" class="has-text-centered">
+      <th class="has-text-right">{{ row.date | date:'EEEE':'es-PE' | uppercase }}</th>
+      <th>{{ row.date | date:'dd':'es-PE'}}</th>
+      <td [ngClass]="findColor(row,row.at_8)">{{ row.at_8 }}</td>
+      <td [ngClass]="findColor(row,row.at_9)">{{ row.at_9 }}</td>
+      <td [ngClass]="findColor(row,row.at_10)">{{ row.at_10 }}</td>
+      <td [ngClass]="findColor(row,row.at_11)">{{ row.at_11 }}</td>
+      <td [ngClass]="findColor(row,row.at_12)">{{ row.at_12 }}</td>
+      <td [ngClass]="findColor(row,row.at_13)">{{ row.at_13 }}</td>
+      <td [ngClass]="findColor(row,row.at_14)">{{ row.at_14 }}</td>
+      <td [ngClass]="findColor(row,row.at_15)">{{ row.at_15 }}</td>
+      <td [ngClass]="findColor(row,row.at_16)">{{ row.at_16 }}</td>
+      <td [ngClass]="findColor(row,row.at_17)">{{ row.at_17 }}</td>
+      <td [ngClass]="findColor(row,row.at_18)">{{ row.at_18 }}</td>
+    </tr>
+  </tbody>
+</table>

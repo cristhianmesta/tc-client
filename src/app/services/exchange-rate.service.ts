@@ -19,4 +19,10 @@ export class ExchangeRateService {
     return this.http.get<ExchangeRate[]>(url);
   }
 
+  
+  getDiaryMinsByMonth(moth: string) : Observable<any[]>{
+    const url = `${this.baseUrl}/mins-by-month/${moth}`;
+    return this.http.get<any[]>(url);
+  }
+
 }
