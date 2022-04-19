@@ -5,10 +5,10 @@ import { HomeComponent } from './pages/home/home.component';
 import { TrendsComponent } from './pages/trends/trends.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
-  { path: 'tendencias', component: TrendsComponent },
-  { path: '**', redirectTo: 'home', pathMatch: 'full'}
+  { path: '', redirectTo: 'evolucion', pathMatch: 'full' },
+  { path: 'evolucion', component: HomeComponent },
+  { path: 'minimos', component: TrendsComponent },
+  { path: '**', redirectTo: 'evolucion', pathMatch: 'full'}
 ];
 
 @NgModule({
