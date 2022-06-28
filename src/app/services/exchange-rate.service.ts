@@ -8,20 +8,21 @@ import { Observable } from 'rxjs';
 })
 export class ExchangeRateService {
 
-  private baseUrl : string = "http://127.0.0.1:5000";
+  // private baseUrl : string = "http://192.168.1.155:5000";
+  private baseUrl : string = "http://localhost:5000";
   
   constructor(private http: HttpClient) { 
 
   }
 
-  getByDay(date: string) : Observable<ExchangeRate[]>{
-    const url = `${this.baseUrl}/exchange-rate/${date}`;
+  getByDay(date: string, service: string) : Observable<ExchangeRate[]>{
+    const url = `${this.baseUrl}/exchange-rate/${date}?service=${service}`;
     return this.http.get<ExchangeRate[]>(url);
   }
 
   
-  getDiaryMinsByMonth(moth: string) : Observable<any[]>{
-    const url = `${this.baseUrl}/mins-by-month/${moth}`;
+  getDiaryMinsByMonth(moth: string, service: string) : Observable<any[]>{
+    const url = `${this.baseUrl}/mins-by-month/${moth}?service=${service}`;
     return this.http.get<any[]>(url);
   }
 

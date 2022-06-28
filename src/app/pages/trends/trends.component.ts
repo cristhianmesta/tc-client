@@ -14,15 +14,15 @@ export class TrendsComponent implements OnInit {
   constructor(private exchangeRateService : ExchangeRateService) { }
 
   ngOnInit(): void {
-    this.getData('04-2022');
+    this.getData('06-2022');
   }
 
   getData(month : string) : void {
     this.exchangeRateService
-            .getDiaryMinsByMonth(month)
+            .getDiaryMinsByMonth(month, "KAMBISTA")
             .subscribe( resp => {
               this.data = resp;
-              this.createTable('04-2022');
+              this.createTable('05-2022');
             });
   }
 
@@ -30,7 +30,7 @@ export class TrendsComponent implements OnInit {
     this.table = Array(30)
                     .fill({})
                     .map( (_,index) => ({ 
-                        date  : new Date(2022,3,index+1),
+                        date  : new Date(2022,4,index+1),
                         day   : index+1,
                         at_8  : this.findValue(index+1,8), 
                         at_9  : this.findValue(index+1,9), 

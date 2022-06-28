@@ -1,18 +1,24 @@
 <div [ngClass]="getDivClass()">
     <div [ngClass]="getSpanClass()">{{ titulo }}</div>
-    <p [ngClass]="getPFecha()">{{ precio.fecha | date:'dd/MM/yyyy HH:mm:ss'  }}</p>
-    <p class="title is-1">{{ precio.valor }} {{ precio.simbolo}}</p>
 
-    <div class="tags are-medium">
-        <span [ngClass]="getSpanRatio()">
-            Prom: {{ precio.rates?.avg  | number:'1.0-3'}} {{ showIconAlert(precio.rates?.avg) }}
-        </span>
-        <span [ngClass]="getSpanRatio()"> 
-            Máx: {{ precio.rates?.max }} {{ showIconAlert(precio.rates?.max) }}
-        </span>
-        <span [ngClass]="getSpanRatio()"> 
-            Min: {{ precio.rates?.min }} {{ showIconAlert(precio.rates?.min) }}
-        </span>
-    </div>
+    <section *ngFor="let item of precio" class="mb-2 ">   
+        <div class="is-size-6 has-text-weight-bold">{{ item.service}} </div>
+        <div class="mb-2">
+            <span class="title is-4">{{ item.valor }} {{ item.simbolo}}</span>
+            <span [ngClass]="getPFecha()">{{ item.fecha | date:'dd/MM/yyyy HH:mm:ss'  }}</span>
+        </div>
+        <div class="tags are-small mb-2">
+            <span [ngClass]="getSpanRatio()">
+                Prom: {{ item.rates?.avg  | number:'1.0-3'}} {{ showIconAlert(item.rates?.avg, item) }}
+            </span>
+            <span [ngClass]="getSpanRatio()"> 
+                Máx: {{ item.rates?.max }} {{ showIconAlert(item.rates?.max, item) }}
+            </span>
+            <span [ngClass]="getSpanRatio()"> 
+                Min: {{ item.rates?.min }} {{ showIconAlert(item.rates?.min, item) }}
+            </span>
+        </div>
+    </section>
+
 
 </div>

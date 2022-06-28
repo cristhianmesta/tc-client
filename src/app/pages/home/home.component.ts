@@ -10,15 +10,20 @@ import { ExchangeRatePrecio, Rate } from 'src/app/interfaces/exchangeRate.interf
 })
 export class HomeComponent implements  AfterContentInit {
 
-  myDate      : string      = new Date().toLocaleDateString('en-CA');
-  data        : any[]       = [];
-  multi       : any[]       = [];
+  myDate         : string      = new Date().toLocaleDateString('en-CA');
+  data_compra        : any[]       = [];
+  data_venta         : any[]       = [];
+  multi_compra       : any[]       = [];
+  multi_venta        : any[]       = [];
 
   actualizando : boolean = false;
   total: number = 0
 
-  pc : ExchangeRatePrecio = { fecha: '00/00/0000 00:00:00', valor: 0.00 , simbolo: "🟡"};
-  pv : ExchangeRatePrecio = { fecha: '00/00/0000 00:00:00', valor: 0.00 , simbolo: "🟡"};
+  pc : ExchangeRatePrecio[] = [];
+  pv : ExchangeRatePrecio[] = [];
+
+  pc_temp : ExchangeRatePrecio[] = [];
+  pv_temp : ExchangeRatePrecio[] = [];
 
   //view: [number, number] = [700, 300];
 
@@ -35,65 +40,96 @@ export class HomeComponent implements  AfterContentInit {
   timeline: boolean = true;
 
   colorScheme : any = {
-    domain: ['#5AA454', '#7aa3e5']
+    domain: ['#26436C', '#FFB73A', '#76D8FF']
   };
 
   constructor(private exchangeRateService : ExchangeRateService) { 
-    this.list(this.myDate);
+    this.listAll();
   }
 
   ngAfterContentInit(): void {
-    setInterval( () => { this.list(this.myDate); }, 10000);
+    setInterval( () => { this.listAll(); }, 10000);
   }
 
   refresh(){
-    this.pv = { fecha: '0000-00-00 00:00:00', valor: 0.00 , simbolo: "🟡"};
-    this.pc = { fecha: '0000-00-00 00:00:00', valor: 0.00 , simbolo: "🟡"}
-    this.list(this.myDate);
+    this.pv = [];
+    this.pc = []; // { fecha: '0000-00-00 00:00:00', valor: 0.00 , simbolo: "🟡"}
+    this.listAll();
   }
 
+  listAll(){
+    this.list(this.myDate, "REXTIE", "#76D8FF");
+    this.list(this.myDate, "TKAMBIO", "#FFB73A");
+    this.list(this.myDate, "KAMBISTA","#26436C");    
+  }
 
-  list(day : string) : void {
+  list(day : string, service : string, color: string) : void {
     this.exchangeRateService
-            .getByDay(day)
+            .getByDay(day, service)
             .subscribe( resp => {
-                this.data = [];
                 if(resp.length>0){
-                  this.data.push(({
-                    name: "Venta",
-                    series: resp.map( x => ({name: x.fecha, value: x.pv}))
+
+                  if(this.data_venta.length === 3){
+                    this.pv_temp = [];
+                    this.pc_temp = [];
+                    this.data_venta = [];
+                    this.data_compra = [];
+                  }
+                  
+                  this.data_venta.push(({
+                    name: `VENTA ${service}`,
+                    series: resp.map( x => ({name: new Date(x.fecha) , value: x.pv})),
+                    color: color
                   }));
-                  this.data.push(({
-                    name: "Compra",
+                  
+                  this.data_compra.push(({
+                    name: `COMPRA ${service}`,
                     series: resp.map( x => ({name: x.fecha, value: x.pc}))
                   }));
-                  this.total = Object.keys(this.data[0].series).length;
-                  
-                  this.pv = { 
-                    fecha   : this.data[0].series[this.total-1].name,
-                    valor   : this.data[0].series[this.total-1].value,
-                    simbolo : this.selectSimbol(this.data[0].series),
-                    rates   : this.populateRates(this.data[0].series)
-                  }
-
-                  this.pc = { 
-                    fecha   : this.data[1].series[this.total-1].name,
-                    valor   : this.data[1].series[this.total-1].value,
-                    simbolo : this.selectSimbol(this.data[1].series),
-                    rates   : this.populateRates(this.data[1].series)
-                  }
 
                 }
- 
-                Object.assign(this, { multi: [...this.data] });
+
+                if(this.data_venta.length === 3){
+
+
+                  this.data_venta.forEach( (element : any) => {
+                    this.pv_temp.push({ 
+                      fecha   : element.series[Object.keys(element.series).length-1].name,
+                      valor   : element.series[Object.keys(element.series).length-1].value,
+                      simbolo : this.selectSimbol(element.series),
+                      rates   : this.populateRates(element.series),
+                      service : element.name.split(" ")[1],
+                    });
+                  });
+
+                  this.data_compra.forEach( (element : any) => {
+                    this.pc_temp.push({ 
+                      fecha   : element.series[Object.keys(element.series).length-1].name,
+                      valor   : element.series[Object.keys(element.series).length-1].value,
+                      simbolo : this.selectSimbol(element.series),
+                      rates   : this.populateRates(element.series),
+                      service : element.name.split(" ")[1],
+                    });
+                  });
+
+                  this.pv = this.pv_temp.sort((a, b) => a.valor - b.valor);
+                  this.pc = this.pc_temp.sort((a, b) => a.valor - b.valor);
+
+
+                  this.colorScheme.domain = [this.data_venta[0].color, this.data_venta[1].color, this.data_venta[2].color];
+                  Object.assign(this, { multi_compra: [...this.data_compra] });
+                  Object.assign(this, { multi_venta: [...this.data_venta] });
+                }
+
             });
            
   }
 
   selectSimbol(collection: any){
     let simbolo = '- 🟡';
-    if(collection[this.total-1].value>collection[this.total-2].value) simbolo = "↗ 🔴"
-    if(collection[this.total-1].value<collection[this.total-2].value) simbolo = "↘ 🟢"
+    let total = Object.keys(collection).length;
+    if(collection[total-1].value>collection[total-2].value) simbolo = "↗ 🔴"
+    if(collection[total-1].value<collection[total-2].value) simbolo = "↘ 🟢"
     return simbolo
   }
 

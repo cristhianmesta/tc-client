@@ -10,7 +10,7 @@ export class PrecioComponent  {
 
   @Input() color  : string = 'primary';
   @Input() titulo : string = '';
-  @Input() precio : ExchangeRatePrecio = { fecha: '00/00/0000 00:00:00', valor: 0.00 , simbolo: "🟡"};
+  @Input() precio : ExchangeRatePrecio[] = [];
 
   getDivClass(){
     return `box m-2 has-background-${this.color}-light`
@@ -28,7 +28,7 @@ export class PrecioComponent  {
     return `tag is-${this.color}`
   }
 
-  showIconAlert(value : any){
-    return value === this.precio.valor ? '💡' : ''
+  showIconAlert(value : any, item : any){
+    return value === item.valor ? '💡' : ''
   }
 }

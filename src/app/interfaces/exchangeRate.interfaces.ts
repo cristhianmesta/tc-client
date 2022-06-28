@@ -10,6 +10,7 @@ export interface ExchangeRate {
 }
 
 export interface ExchangeRatePrecio {
+    service : string;
     fecha   : string;
     valor   : number;
     rates?  : RateValues;
