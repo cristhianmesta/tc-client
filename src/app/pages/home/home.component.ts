@@ -113,7 +113,7 @@ export class HomeComponent implements  AfterContentInit {
                   });
 
                   this.pv = this.pv_temp.sort((a, b) => a.valor - b.valor);
-                  this.pc = this.pc_temp.sort((a, b) => a.valor - b.valor);
+                  this.pc = this.pc_temp.sort((a, b) => b.valor - a.valor);
 
 
                   this.colorScheme.domain = [this.data_venta[0].color, this.data_venta[1].color, this.data_venta[2].color];

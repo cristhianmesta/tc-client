@@ -14,7 +14,7 @@ export class TrendsComponent implements OnInit {
   constructor(private exchangeRateService : ExchangeRateService) { }
 
   ngOnInit(): void {
-    this.getData('06-2022');
+    this.getData('07-2022');
   }
 
   getData(month : string) : void {
